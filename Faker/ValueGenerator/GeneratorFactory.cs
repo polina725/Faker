@@ -12,6 +12,10 @@ namespace Faker.ValueGenerator
         {
             Dictionary<Type, IBaseGenerator> dict = new Dictionary<Type, IBaseGenerator>();
             AddGenerator(new ShortGenerator(), dict);
+            AddGenerator(new BoolGenerator(), dict);
+            AddGenerator(new FloatGenerator(), dict);
+            AddGenerator(new DoubleGenerator(), dict);
+            AddGenerator(new LongGenerator(), dict);
             return dict;
         }
 

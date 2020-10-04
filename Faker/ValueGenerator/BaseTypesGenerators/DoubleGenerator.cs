@@ -2,7 +2,7 @@
 
 namespace Faker.ValueGenerator.BaseTypesGenerators
 {
-    class DoubleGenerator
+    class DoubleGenerator : IBaseGenerator
     {
         private Random rand = new Random();
 

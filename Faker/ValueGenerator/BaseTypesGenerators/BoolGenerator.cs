@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Faker.ValueGenerator;
-
 namespace Faker.ValueGenerator.BaseTypesGenerators
 {
     class BoolGenerator : IBaseGenerator
