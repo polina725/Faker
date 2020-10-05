@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntGeneratorPlugin", "IntGe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sometrash", "sometrash\sometrash.csproj", "{A26D39DA-F9CB-4351-A68B-8A7069A18880}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakerTests", "FakerTests\FakerTests.csproj", "{0C058FD3-0FD0-4AD0-9D65-CD6DACBB4861}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{A26D39DA-F9CB-4351-A68B-8A7069A18880}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A26D39DA-F9CB-4351-A68B-8A7069A18880}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A26D39DA-F9CB-4351-A68B-8A7069A18880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C058FD3-0FD0-4AD0-9D65-CD6DACBB4861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C058FD3-0FD0-4AD0-9D65-CD6DACBB4861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C058FD3-0FD0-4AD0-9D65-CD6DACBB4861}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C058FD3-0FD0-4AD0-9D65-CD6DACBB4861}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

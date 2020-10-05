@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Faker.TestClasses;
+using System;
 
 namespace sometrash
 {
@@ -9,13 +10,13 @@ namespace sometrash
         /// 
         static void Main(string[] args)
         {
-            Faker.Faker f = new Faker.Faker();
-            Type t = typeof(person);
+            Faker.Faker f = new Faker.Faker(3);
+            Console.WriteLine(typeof(person).IsPrimitive);
             try
             {
-                Console.WriteLine(f.Create<member>());
+                Console.WriteLine(f.Create<char>());
             }
-            catch(Exception ex) 
+            catch(Faker.FakerException ex) 
             {
                 Console.WriteLine(ex.Message);
             }

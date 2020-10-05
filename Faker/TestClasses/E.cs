@@ -1,7 +1,7 @@
 ﻿namespace Faker.TestClasses
 {
-    public class D
+    public class E
     {
-        public E e;
+        public C c;
     }
 }

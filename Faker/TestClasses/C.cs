@@ -2,5 +2,6 @@
 {
     public class C
     {
+        public D d;
     }
 }

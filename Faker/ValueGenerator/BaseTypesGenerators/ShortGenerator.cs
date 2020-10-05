@@ -8,7 +8,7 @@ namespace Faker.ValueGenerator.BaseTypesGenerators
 
         public object Generate()
         {
-            return (short)rand.Next();
+            return (short)rand.Next(2,255);
         }
 
         public Type GetGeneratedType()

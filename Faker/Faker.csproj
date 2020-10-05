@@ -43,12 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CircularReferencesResolver.cs" />
     <Compile Include="Faker.cs" />
+    <Compile Include="FakerException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClasses\A.cs" />
     <Compile Include="TestClasses\B.cs" />
     <Compile Include="TestClasses\C.cs" />
     <Compile Include="TestClasses\D.cs" />
+    <Compile Include="TestClasses\E.cs" />
     <Compile Include="ValueGenerator\BaseTypesGenerators\BoolGenerator.cs" />
     <Compile Include="ValueGenerator\BaseTypesGenerators\DoubleGenerator.cs" />
     <Compile Include="ValueGenerator\BaseTypesGenerators\FloatGenerator.cs" />

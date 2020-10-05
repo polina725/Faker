@@ -4,11 +4,10 @@
     {
         private int number;
         private int n;
-        private string s;
         public string str;
 
         public int Number { set { number = value; } }
-        public string S { set { s = value; } }
+        public string S { set; get; }
 
         public A(int num)
         {

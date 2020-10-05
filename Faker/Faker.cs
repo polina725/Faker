@@ -12,9 +12,11 @@ namespace Faker
     {
         private Dictionary<Type, IBaseGenerator> baseGenerators;
         private Dictionary<Type, IGenericGenerator> genericGenerators;
+        private CircularReferencesResolver resolver;
 
-        public Faker()
+        public Faker(int maxLevel)
         {
+            resolver = new CircularReferencesResolver(maxLevel);
             baseGenerators = GeneratorFactory.CraeteBaseTypesGenerators();
             baseGenerators.Add(typeof(DateTime), new DateGenerator());
             genericGenerators = GeneratorFactory.CreateGenericTypesGenerator();
@@ -47,11 +49,7 @@ namespace Faker
         {
             return (T)Create(typeof(T));
         }
-        /// <summary>
-        /// recursion!!!!
-        /// </summary>
-        /// <param name="t"></param>
-        /// <returns></returns>
+
         private object Create(Type t)
         {
             if (baseGenerators.TryGetValue(t, out IBaseGenerator gen))
@@ -60,9 +58,9 @@ namespace Faker
                 return gener.Generate();
             else if (t.IsClass)
                 return CreateClassObject(t);
-            else if (t.IsValueType)
+            else if (t.IsValueType && !t.IsPrimitive)
                return CreateStruct(t);
-            throw new Exception("Can't create an object");
+            throw new FakerException("Can't create an object");
         }
 
         private object CreateStruct(Type type)
@@ -132,13 +130,25 @@ namespace Faker
             PropertyInfo[] properties = type.GetProperties();
             foreach (FieldInfo field in fields)
                 if (field.GetValue(obj) == null)
-                    field.SetValue(obj,Create(field.FieldType));
+                {
+                    resolver.AddReference(field.FieldType);
+                    if (resolver.CanCreateAnObject(field.FieldType))
+                        field.SetValue(obj, Create(field.FieldType));
+                    else
+                        field.SetValue(obj, null);
+                    resolver.RemoveReference(field.FieldType);
+                }
             foreach (PropertyInfo property in properties)
                 if (property.CanWrite)
                 {
                     if (property.CanRead && property.GetValue(obj) != null)
                         continue;
-                    property.SetValue(obj, Create(property.PropertyType));
+                    resolver.AddReference(property.PropertyType);
+                    if (resolver.CanCreateAnObject(property.PropertyType))
+                        property.SetValue(obj, Create(property.PropertyType));
+                    else
+                        property.SetValue(obj, null);
+                    resolver.RemoveReference(property.PropertyType);
                 }
         }
     }
