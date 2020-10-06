@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionalFunction.cs" />
     <Compile Include="CircularReferencesResolver.cs" />
     <Compile Include="Faker.cs" />
     <Compile Include="FakerConfig.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="ValueGenerator\BaseTypesGenerators\FloatGenerator.cs" />
     <Compile Include="ValueGenerator\BaseTypesGenerators\LongGenerator.cs" />
     <Compile Include="ValueGenerator\BaseTypesGenerators\ShortGenerator.cs" />
+    <Compile Include="ValueGenerator\CleverGenerators\CleverIntGenerator.cs" />
     <Compile Include="ValueGenerator\CleverGenerators\CleverStringGenerator.cs" />
     <Compile Include="ValueGenerator\GeneratorFactory.cs" />
     <Compile Include="ValueGenerator\GenericGenerators\ListGenerator.cs" />

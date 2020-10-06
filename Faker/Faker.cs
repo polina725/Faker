@@ -110,9 +110,17 @@ namespace Faker
                 return null;
             List<object> generatedParameters = new List<object>();
             bool canUseCustomGenerators = conf != null && conf.ClassHasCustomGenerators(t);
-            foreach(ParameterInfo param in parameters)
+            foreach (ParameterInfo param in parameters)
             {
                 bool parameterGenerated = false;
+                if (canUseCustomGenerators)
+                {
+                    if (conf.FieldOrPropertyHasCustomGenerator(t, AdditionalFunction.ProceedParameterName(param.Name), out IBaseGenerator g))
+                    {
+                        generatedParameters.Add(g.Generate());
+                        continue;
+                    }
+                }
                 if (baseGenerators.TryGetValue(param.ParameterType, out IBaseGenerator gen))
                 {
                     generatedParameters.Add(gen.Generate());
@@ -136,20 +144,23 @@ namespace Faker
             PropertyInfo[] properties = type.GetProperties();
             bool canUseCustomGenerators = conf != null && conf.ClassHasCustomGenerators(obj.GetType());
             foreach (FieldInfo field in fields)
-            {
-                resolver.AddReference(field.FieldType);
-                if (resolver.CanCreateAnObject(field.FieldType))
-                    field.SetValue(obj, Create(field.FieldType));
-                else
-                    field.SetValue(obj, null);
-                resolver.RemoveReference(field.FieldType);
-                
-            }
+                if (!AdditionalFunction.IsFilled(field, obj))
+                {
+                    resolver.AddReference(field.FieldType);
+                    if (canUseCustomGenerators && conf.FieldOrPropertyHasCustomGenerator(obj.GetType(), field.Name, out IBaseGenerator g))
+                        field.SetValue(obj, g.Generate());
+                    else if (resolver.CanCreateAnObject(field.FieldType))
+                        field.SetValue(obj, Create(field.FieldType));
+                    else
+                        field.SetValue(obj, null);
+                    resolver.RemoveReference(field.FieldType);
+
+                }
             foreach (PropertyInfo property in properties)
-                if (property.CanWrite)
+                if (property.CanWrite && !AdditionalFunction.IsFilled(property,obj))
                 {
                     resolver.AddReference(property.PropertyType);
-                    if (canUseCustomGenerators && conf.FieldOrPropertyHasCustomGenerator(obj.GetType(), property, out IBaseGenerator g))
+                    if (canUseCustomGenerators && conf.FieldOrPropertyHasCustomGenerator(obj.GetType(), property.Name, out IBaseGenerator g))
                         property.SetValue(obj, g.Generate());
                     else if (resolver.CanCreateAnObject(property.PropertyType))
                         property.SetValue(obj, Create(property.PropertyType));
@@ -158,20 +169,5 @@ namespace Faker
                     resolver.RemoveReference(property.PropertyType);
                 }
         }
-
-/*        private bool TryCreateByCustomGenerator(Type t,MemberInfo member,out object obj)
-        {
-            IBaseGenerator generator = conf.FindFieldOrPropertyCustomGenerator(t, member);
-            if (generator != null)
-            {
-                obj = generator.Generate();
-                return true;
-            }
-            else
-            {
-                obj = null;
-                return false;
-            }
-        }*/
     }
 }

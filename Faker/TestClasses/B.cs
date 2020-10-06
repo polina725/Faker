@@ -5,12 +5,14 @@
         private float temp;
         private long k;
 
+        public int Number { get; }
+        public string S { set; get; }
+
         public B() { }
         
-        public B(float a, long n)
+        public B(int number)
         {
-            temp = a;
-            k = n;
+            Number = number;
         }
 
     }

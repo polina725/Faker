@@ -8,7 +8,7 @@ namespace Faker
 {
     public class FakerConfig
     {
-        private Dictionary<Type, Dictionary<PropertyInfo, IBaseGenerator>> customGenerators = new Dictionary<Type, Dictionary<PropertyInfo, IBaseGenerator>>();
+        private Dictionary<Type, Dictionary<MemberInfo, IBaseGenerator>> customGenerators = new Dictionary<Type, Dictionary<MemberInfo, IBaseGenerator>>();
 
         public void Add<TClass, TPropertyType, TGenerator>(Expression<Func<TClass, TPropertyType>> expression)
         {
@@ -23,13 +23,13 @@ namespace Faker
 
             if (customGenerators.ContainsKey(typeof(TClass)))
             {
-                Dictionary<PropertyInfo, IBaseGenerator> innerDict = customGenerators[typeof(TClass)];
-                innerDict.Add((PropertyInfo)((MemberExpression)body).Member, generator);
+                Dictionary<MemberInfo, IBaseGenerator> innerDict = customGenerators[typeof(TClass)];
+                innerDict.Add(((MemberExpression)body).Member, generator);
             }
             else
             {
-                Dictionary<PropertyInfo, IBaseGenerator> innerDict = new Dictionary<PropertyInfo, IBaseGenerator>();
-                innerDict.Add((PropertyInfo)((MemberExpression)body).Member, generator);
+                Dictionary<MemberInfo, IBaseGenerator> innerDict = new Dictionary<MemberInfo, IBaseGenerator>();
+                innerDict.Add(((MemberExpression)body).Member, generator);
                 customGenerators.Add(typeof(TClass), innerDict);
             }
         }
@@ -39,29 +39,17 @@ namespace Faker
             return customGenerators.ContainsKey(t);
         }
 
-        public bool FieldOrPropertyHasCustomGenerator(Type classType,PropertyInfo member,out IBaseGenerator gen)
+        public bool FieldOrPropertyHasCustomGenerator(Type classType,string memberName/*MemberInfo member*/,out IBaseGenerator gen)
         {
-            Dictionary<PropertyInfo, IBaseGenerator> innerDict = customGenerators[classType];
-            Console.WriteLine(member.GetType());
-            foreach (KeyValuePair<PropertyInfo, IBaseGenerator> pair in innerDict)
-                if (pair.Key.Name.Equals(member.Name) && pair.Key.PropertyType.Equals(member.PropertyType))
+            Dictionary<MemberInfo, IBaseGenerator> innerDict = customGenerators[classType];
+            foreach (KeyValuePair<MemberInfo, IBaseGenerator> pair in innerDict)
+                if (pair.Key.Name.Equals(memberName))
                 {
                     gen = pair.Value;
                     return true;
                 }
             gen = null;
             return false;                
-        }
-    }
-
-    public struct fieldOrPropertyInfo
-    {
-        public string Name { get; }
-        public Type MemberType { get; }
-        public fieldOrPropertyInfo(string name,Type memberType)
-        {
-            Name = name;
-            MemberType = memberType;
         }
     }
 }
