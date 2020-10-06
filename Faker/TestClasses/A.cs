@@ -4,14 +4,15 @@
     {
         private int number;
         private int n;
-        public string str;
+        public string str { get; set; }
 
-        public int Number { set { number = value; } }
+        public int Number { get; }
         public string S { set; get; }
 
-        public A(int num)
+        public A(int num,int number)
         {
             number = num;
+            this.Number = num;
         }
 
         public override string ToString()

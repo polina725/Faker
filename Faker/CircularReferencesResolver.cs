@@ -32,7 +32,7 @@ namespace Faker
 
         public bool CanCreateAnObject(Type t)
         {
-            return !circularReferences.ContainsKey(t) && circularReferences[t] < maxRecursionLevel;
+            return circularReferences.ContainsKey(t) && circularReferences[t] < maxRecursionLevel;
         }
     }
 }

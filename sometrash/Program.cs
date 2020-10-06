@@ -2,6 +2,7 @@
 using Faker.ValueGenerator.CleverGenerators;
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace sometrash
 {
@@ -15,16 +16,11 @@ namespace sometrash
             Faker.Faker f = new Faker.Faker(3);
             Faker.FakerConfig conf = new Faker.FakerConfig();
             conf.Add<A, string, CleverStringGenerator>(a => a.str);
-         /*   Console.WriteLine(typeof(person).IsPrimitive);
-            try
-            {
-                Console.WriteLine(f.Create<char>());
-            }
-            catch(Faker.FakerException ex) 
-            {
-                Console.WriteLine(ex.Message);
-            }
-
+            object obj = f.Create<A>();
+            Console.WriteLine(obj.GetType() + " " + ((A)obj).str);
+            f.AddConfig(conf);
+            Console.WriteLine(f.Create<A>().str);
+/*            Type t = typeof(A);
             ConstructorInfo[] constructors = t.GetConstructors();
             ConstructorInfo currentConstructor = null;
             if (constructors.Length!=0)
@@ -32,10 +28,11 @@ namespace sometrash
             foreach (ConstructorInfo c in constructors)
                 if (c.GetParameters().Length > currentConstructor.GetParameters().Length)
                     currentConstructor = c;
-            object[] o = { 3, 5 };
-            person per = (person)currentConstructor.Invoke(o);
-            object obj = Activator.CreateInstance(t);
-            Console.WriteLine(obj+" "+per);   */         
+            ParameterInfo[] parameters = currentConstructor.GetParameters();
+            foreach (ParameterInfo p in parameters)
+            {
+                Console.WriteLine(p.Name + " " + p.ParameterType + " " + p.Member);
+            }*/
         }
 
         public struct member
