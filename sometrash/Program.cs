@@ -1,5 +1,7 @@
 ﻿using Faker.TestClasses;
+using Faker.ValueGenerator.CleverGenerators;
 using System;
+using System.Linq.Expressions;
 
 namespace sometrash
 {
@@ -11,7 +13,9 @@ namespace sometrash
         static void Main(string[] args)
         {
             Faker.Faker f = new Faker.Faker(3);
-            Console.WriteLine(typeof(person).IsPrimitive);
+            Faker.FakerConfig conf = new Faker.FakerConfig();
+            conf.Add<A, string, CleverStringGenerator>(a => a.str);
+         /*   Console.WriteLine(typeof(person).IsPrimitive);
             try
             {
                 Console.WriteLine(f.Create<char>());
@@ -21,7 +25,7 @@ namespace sometrash
                 Console.WriteLine(ex.Message);
             }
 
-          /*  ConstructorInfo[] constructors = t.GetConstructors();
+            ConstructorInfo[] constructors = t.GetConstructors();
             ConstructorInfo currentConstructor = null;
             if (constructors.Length!=0)
                 currentConstructor = constructors[0];
@@ -38,6 +42,7 @@ namespace sometrash
         {
             public short n;
             private short b;
+            public A a;
 
         }
 

@@ -13,6 +13,7 @@ namespace Faker
         private Dictionary<Type, IBaseGenerator> baseGenerators;
         private Dictionary<Type, IGenericGenerator> genericGenerators;
         private CircularReferencesResolver resolver;
+        private FakerConfig conf;
 
         public Faker(int maxLevel)
         {
@@ -44,6 +45,10 @@ namespace Faker
             }
         }
 
+        public void AddConfig(FakerConfig c)
+        {
+            conf = c; 
+        }
 
         public T Create<T>()
         {
@@ -129,20 +134,17 @@ namespace Faker
             FieldInfo[] fields = type.GetFields();
             PropertyInfo[] properties = type.GetProperties();
             foreach (FieldInfo field in fields)
-                if (field.GetValue(obj) == null)
-                {
-                    resolver.AddReference(field.FieldType);
-                    if (resolver.CanCreateAnObject(field.FieldType))
-                        field.SetValue(obj, Create(field.FieldType));
-                    else
-                        field.SetValue(obj, null);
-                    resolver.RemoveReference(field.FieldType);
-                }
+            {
+                resolver.AddReference(field.FieldType);
+                if (resolver.CanCreateAnObject(field.FieldType))
+                    field.SetValue(obj, Create(field.FieldType));
+                else
+                    field.SetValue(obj, null);
+                resolver.RemoveReference(field.FieldType);
+            }
             foreach (PropertyInfo property in properties)
                 if (property.CanWrite)
                 {
-                    if (property.CanRead && property.GetValue(obj) != null)
-                        continue;
                     resolver.AddReference(property.PropertyType);
                     if (resolver.CanCreateAnObject(property.PropertyType))
                         property.SetValue(obj, Create(property.PropertyType));
@@ -150,6 +152,14 @@ namespace Faker
                         property.SetValue(obj, null);
                     resolver.RemoveReference(property.PropertyType);
                 }
+        }
+
+        private object CreateByCustomGenerator(Type t,MemberInfo member)
+        {
+            IBaseGenerator generator = conf.FindFieldOrPropertyCustomGenerator(t, member);
+            if (generator != null)
+                return generator.Generate();
+            return null;
         }
     }
 }

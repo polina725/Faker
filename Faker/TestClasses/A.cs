@@ -16,7 +16,7 @@
 
         public override string ToString()
         {
-            return number + " " + n + " " + s + " " + str;
+            return number + " " + n + " " + S + " " + str;
         }
     }
 }

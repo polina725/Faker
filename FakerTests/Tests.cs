@@ -61,18 +61,16 @@ namespace FakerTests
             catch { }
         }
 
-        /*[TestMethod]
-        public void TypeGeneratorDoesntExists()
+        [TestMethod]
+        public void CircularReferencesCheck()
         {
             try
             {
-                char c = faker.Create<char>();
+                C c = faker.Create<C>();
+                Assert.AreEqual(null, c.d.e.c);
             }
-            catch(Faker.FakerException ex) 
-            {
-                
-            }
-        }*/
+            catch{ }
+        }
 
         public struct member
         {
