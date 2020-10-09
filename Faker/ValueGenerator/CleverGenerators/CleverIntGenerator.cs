@@ -8,14 +8,16 @@ namespace Faker.ValueGenerator.CleverGenerators
 {
     public class CleverIntGenerator : IBaseGenerator
     {
-        public object Generate()
+        private Type generatingType;
+
+        public object Generate(GeneratorContext context)
         {
             return 42;
         }
 
-        public Type GetGeneratedType()
+        public bool CanGenerate(Type t)
         {
-            return typeof(int);
+            return t.Equals(generatingType);
         }
     }
 }

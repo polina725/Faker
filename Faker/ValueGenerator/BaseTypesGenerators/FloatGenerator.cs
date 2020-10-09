@@ -4,16 +4,16 @@ namespace Faker.ValueGenerator.BaseTypesGenerators
 {
     class FloatGenerator : IBaseGenerator
     {
-        private Random rand = new Random();
+        private Type generatingType;
 
-        public object Generate()
+        public object Generate(GeneratorContext context)
         {
-            return (float)rand.NextDouble();
+            return (float)context.Random.NextDouble();
         }
 
-        public Type GetGeneratedType()
+        public bool CanGenerate(Type t)
         {
-            return typeof(float);
+            return t.Equals(generatingType);
         }
     }
 }

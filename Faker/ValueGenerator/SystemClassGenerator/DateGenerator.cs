@@ -4,19 +4,19 @@ namespace Faker.ValueGenerator.SystemClassGenerator
 {
     class DateGenerator : IBaseGenerator
     {
-        private Random rand = new Random();
+        private Type generatingType = typeof(DateTime);
 
-        public object Generate()
+        public object Generate(GeneratorContext context)
         {
             var buf = new byte[8];
-            rand.NextBytes(buf);
+            context.Random.NextBytes(buf);
             var ticks = BitConverter.ToInt64(buf, 0);
             return new DateTime(Math.Abs(ticks % (DateTime.MaxValue.Ticks - DateTime.MinValue.Ticks)) + DateTime.MinValue.Ticks);
         }
 
-        public Type GetGeneratedType()
+        public bool CanGenerate(Type t)
         {
-            return typeof(DateTime);
+            return t.Equals(generatingType);
         }
     }
 }

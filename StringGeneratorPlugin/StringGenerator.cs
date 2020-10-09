@@ -6,18 +6,18 @@ namespace StringGeneratorPlugin
 {
     public class StringGenerator : IBaseGenerator
     {
-        private Random rand = new Random();
+        private Type generatingType = typeof(string);
 
-            public object Generate()
+            public object Generate(Faker.GeneratorContext context)
             {
-                byte[] arr = new byte[rand.Next(2, 255)];
-                rand.NextBytes(arr);
+                byte[] arr = new byte[context.Random.Next(2, 255)];
+                context.Random.NextBytes(arr);
                 return Convert.ToBase64String(arr);
             }
 
-            public Type GetGeneratedType()
+            public bool CanGenerate(Type t)
             {
-                return typeof(string);
+                return t.Equals(generatingType);
             }
     }
 }

@@ -25,8 +25,7 @@ namespace FakerTests
                 member m = faker.Create<member>();
                 person per = faker.Create<person>();
                 DateTime date = faker.Create<DateTime>();
-                Assert.AreNotEqual(null, m);
-                Assert.AreNotEqual(null, per);
+                Assert.AreNotEqual(null, per.str);
                 Assert.AreNotEqual(0, m.n);
                 Assert.AreNotEqual(0, m.B);
                 Assert.AreNotEqual(null, date);
@@ -42,7 +41,9 @@ namespace FakerTests
                 List<int> list = faker.Create<List<int>>();
                 List<string> l = faker.Create<List<string>>();
                 Assert.AreNotEqual(null, list);
-                Assert.AreNotEqual(null, l);
+                Assert.AreNotEqual(null, list);
+                Assert.AreNotEqual(0, list.Count);
+                Assert.AreNotEqual(0, l.Count);
             }
             catch { }
         }
@@ -53,10 +54,11 @@ namespace FakerTests
             try
             {
                 A a = faker.Create<A>();
-                B b = faker.Create<B>();
                 Assert.AreNotEqual(null, a);
-                Assert.AreNotEqual(null, b);
+                Assert.AreNotEqual(null, a.b);
                 Assert.AreNotEqual(null, a.str);                
+                Assert.AreNotEqual(null, a.b.S);                
+                Assert.AreNotEqual(0, a.b.Number);                              
             }
             catch { }
         }
@@ -67,9 +69,12 @@ namespace FakerTests
             try
             {
                 C c = faker.Create<C>();
+                Assert.AreNotEqual(null, c);
+                Assert.AreNotEqual(null, c.d);
+                Assert.AreNotEqual(null, c.d.e);
                 Assert.AreEqual(null, c.d.e.c);
             }
-            catch{ }
+            catch { }
         }
 
         [TestMethod]
@@ -111,12 +116,12 @@ namespace FakerTests
 
         struct person
         {
-            public int n;
+            public string str;
             private int b;
 
-            public person(int a, int k)
+            public person(string s, int k)
             {
-                n = a;
+                str = s;
                 b = k;
             }
         }

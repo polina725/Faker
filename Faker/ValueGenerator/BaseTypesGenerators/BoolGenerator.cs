@@ -4,19 +4,19 @@ namespace Faker.ValueGenerator.BaseTypesGenerators
 {
     class BoolGenerator : IBaseGenerator
     {
-        private Random rand = new Random();
+        private Type generatingType =  typeof(bool);
 
-        public object Generate()
+        public object Generate(GeneratorContext context)
         {
-            if (rand.Next(2) == 1)
+            if (context.Random.Next(2) == 1)
                 return true;
             else
                 return false;
         }
 
-        public Type GetGeneratedType()
+        public bool CanGenerate(Type t)
         {
-            return typeof(bool);
+            return t.Equals(generatingType);
         }
     }
 }

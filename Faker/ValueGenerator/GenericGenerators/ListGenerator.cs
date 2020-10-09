@@ -1,25 +1,33 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 
 namespace Faker.ValueGenerator.GenericGenerators
 {
-    public class ListGenerator<T> : IGenericGenerator
+    public class ListGenerator : IBaseGenerator
     {
+        private Type generatingType  = typeof(List<>);
 
-        public object Generate()
+        public object Generate(GeneratorContext context)
         {
-            List<T> list = new List<T>();
-            Faker faker = new Faker(true);
-            int n = new Random().Next(1, 5);
+            if (!context.TargetType.IsGenericType || !context.TargetType.GetGenericTypeDefinition().Equals(typeof(List<>)))
+                return null;
+            Type innerType = context.TargetType.GetGenericArguments()[0];
+ /*           if (innerType.IsGenericType)
+                return null;*/
+            IList obj = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(innerType));
+            int n = context.Random.Next(1,11);
             for (int i = 0; i < n; i++)
-                list.Add(faker.Create<T>());
-            return list;
+            {
+                obj.Add(context.Faker.Create(innerType));
+            }
+            return obj;
         }
 
-        public Type GetGeneratedType()
+        public bool CanGenerate(Type t)
         {
-            return typeof(List<T>);
+            return t.Equals(generatingType);
         }
     }
 }

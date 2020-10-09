@@ -16,7 +16,7 @@ namespace Faker
             if (body.NodeType != ExpressionType.MemberAccess)
                 throw new FakerException("Invalid lambda expression");
             IBaseGenerator generator = (IBaseGenerator)Activator.CreateInstance(typeof(TGenerator));
-            if (!generator.GetGeneratedType().Equals(typeof(TPropertyType)))
+            if (!generator.CanGenerate(typeof(TPropertyType)))
             {
                 throw new FakerException("Illegal generator");
             }

@@ -4,16 +4,16 @@ namespace Faker.ValueGenerator.BaseTypesGenerators
 {
     class ShortGenerator : IBaseGenerator
     {
-        private Random rand = new Random();
-
-        public object Generate()
+        private Type generatingType = typeof(short);
+        
+        public object Generate(GeneratorContext context)
         {
-            return (short)rand.Next(2,255);
+            return (short)context.Random.Next(1);
         }
 
-        public Type GetGeneratedType()
+        public bool CanGenerate(Type t)
         {
-            return typeof(short);
+            return t.Equals(generatingType);
         }
     }
 }

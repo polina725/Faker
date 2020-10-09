@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Faker
 {
@@ -24,9 +25,9 @@ namespace Faker
 
         public void RemoveReference(Type t)
         {
-            if (circularReferences.ContainsKey(t))
+            if (circularReferences.ContainsKey(t) && circularReferences[t] != 0)
                 circularReferences[t] -= 1;
-            if (circularReferences[t] == 0)
+            if (circularReferences[t] == -1)
                 circularReferences.Remove(t);
         }
 

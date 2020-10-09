@@ -6,16 +6,16 @@ namespace IntGenerator
 {
     public class IntGenerator : IBaseGenerator
     {
-        private Random rand = new Random();
+        private Type generatingType = typeof(int);
 
-        public object Generate()
+        public object Generate(Faker.GeneratorContext context)
         {
-            return rand.Next();
+            return context.Random.Next(1);
         }
 
-        public Type GetGeneratedType()
+        public bool CanGenerate(Type t)
         {
-            return typeof(int);
+            return t.Equals(generatingType);
         }
     }
 }

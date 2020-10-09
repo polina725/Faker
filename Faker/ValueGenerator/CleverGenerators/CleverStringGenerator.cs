@@ -4,20 +4,21 @@ namespace Faker.ValueGenerator.CleverGenerators
 {
     public class CleverStringGenerator : IBaseGenerator
     {
+        private Type generatingType = typeof(string);
+
         private string[] someWords = { "clever", "generator" ,"bruh",
                                         "War","is","peace","Freedom","is","slavery","Ignorance","is","strength",
                                         "The","world's","full","of","lonely","people","afraid","to","make","the","first","move"};
-        private Random rand = new Random();
 
-        public object Generate()
+        public object Generate(GeneratorContext context)
         {
-            int n = rand.Next(someWords.Length + 1);
+            int n = context.Random.Next(someWords.Length + 1);
             return someWords[n];
         }
 
-        public Type GetGeneratedType()
+        public bool CanGenerate(Type t)
         {
-            return typeof(string);
+            return t.Equals(generatingType);
         }
     }
 }

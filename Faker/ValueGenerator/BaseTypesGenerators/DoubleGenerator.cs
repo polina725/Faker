@@ -4,16 +4,16 @@ namespace Faker.ValueGenerator.BaseTypesGenerators
 {
     class DoubleGenerator : IBaseGenerator
     {
-        private Random rand = new Random();
+        private Type generatingType = typeof(double);
 
-        public object Generate()
+        public object Generate(GeneratorContext context)
         {
-            return rand.NextDouble();
+            return context.Random.NextDouble();
         }
 
-        public Type GetGeneratedType()
+        public bool CanGenerate(Type t)
         {
-            return typeof(double);
+            return t.Equals(generatingType);
         }
     }
 }

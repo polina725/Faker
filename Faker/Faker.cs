@@ -10,24 +10,17 @@ namespace Faker
 {
     public class Faker
     {
-        private Dictionary<Type, IBaseGenerator> baseGenerators;
-        private Dictionary<Type, IGenericGenerator> genericGenerators;
+        public List<IBaseGenerator> generators;
         private CircularReferencesResolver resolver;
         private FakerConfig conf;
+        private Random rand;
 
         public Faker(int maxLevel)
         {
+            rand = new Random();
             resolver = new CircularReferencesResolver(maxLevel);
-            baseGenerators = GeneratorFactory.CraeteBaseTypesGenerators();
-            baseGenerators.Add(typeof(DateTime), new DateGenerator());
-            genericGenerators = GeneratorFactory.CreateGenericTypesGenerator();
-            LoadPlugins();
-        }
-
-        public Faker(bool onlyBaseTypes)
-        {
-            baseGenerators = GeneratorFactory.CraeteBaseTypesGenerators();
-            baseGenerators.Add(typeof(DateTime), new DateGenerator());
+            generators = GeneratorFactory.CraeteBaseTypesGenerators();
+            generators.Add(new DateGenerator());           
             LoadPlugins();
         }
 
@@ -41,7 +34,7 @@ namespace Faker
             foreach (Assembly a in dlls)
             {
                 IBaseGenerator d = (IBaseGenerator) a.CreateInstance(a.GetTypes()[0].ToString());
-                baseGenerators.Add(d.GetGeneratedType(), d);
+                generators.Add(d);
             }
         }
 
@@ -55,18 +48,34 @@ namespace Faker
             return (T)Create(typeof(T));
         }
 
-        private object Create(Type t)
+        internal object Create(Type t)
         {
-            if (baseGenerators.TryGetValue(t, out IBaseGenerator gen))
-                return gen.Generate();
-            else if (t.IsGenericType && genericGenerators.TryGetValue(t, out IGenericGenerator gener))
-                return gener.Generate();
+            if (GeneratorExists(t, out IBaseGenerator gen))
+                return gen.Generate(new GeneratorContext(rand,t,this));
             else if (t.IsClass)
                 return CreateClassObject(t);
             else if (t.IsValueType && !t.IsPrimitive)
-               return CreateStruct(t);
-            throw new FakerException("Can't create an object");
+                return CreateStruct(t);
+            throw new ArgumentException("Can't create an object");
         }
+
+        private bool GeneratorExists(Type t, out IBaseGenerator gen)
+        {
+            gen = null;
+            foreach (IBaseGenerator generator in generators)
+            {
+                Type tmp = t;
+                if (t.IsGenericType)
+                    tmp = t.GetGenericTypeDefinition();
+                if (generator.CanGenerate(tmp))
+                {
+                    gen = generator;
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         private object CreateStruct(Type type)
         {
@@ -112,27 +121,27 @@ namespace Faker
             bool canUseCustomGenerators = conf != null && conf.ClassHasCustomGenerators(t);
             foreach (ParameterInfo param in parameters)
             {
-                bool parameterGenerated = false;
+
                 if (canUseCustomGenerators)
                 {
                     if (conf.FieldOrPropertyHasCustomGenerator(t, AdditionalFunction.ProceedParameterName(param.Name), out IBaseGenerator g))
                     {
-                        generatedParameters.Add(g.Generate());
+                        generatedParameters.Add(g.Generate(new GeneratorContext(rand, param.ParameterType, this)));
                         continue;
                     }
                 }
-                if (baseGenerators.TryGetValue(param.ParameterType, out IBaseGenerator gen))
+                else
                 {
-                    generatedParameters.Add(gen.Generate());
-                    parameterGenerated = true;
+                    try
+                    {
+                        generatedParameters.Add(Create(param.ParameterType));
+                    }
+                    catch (ArgumentException)
+                    {
+                        generatedParameters.Add(null);
+                    }
                 }
-                else if (genericGenerators.TryGetValue(param.ParameterType, out IGenericGenerator genr))
-                {
-                    generatedParameters.Add(genr.Generate());
-                    parameterGenerated = true;
-                }
-                if (!parameterGenerated)
-                    generatedParameters.Add(null);
+                
             }
             return generatedParameters.ToArray();
         }
@@ -147,10 +156,24 @@ namespace Faker
                 if (!AdditionalFunction.IsFilled(field, obj))
                 {
                     resolver.AddReference(field.FieldType);
-                    if (canUseCustomGenerators && conf.FieldOrPropertyHasCustomGenerator(obj.GetType(), field.Name, out IBaseGenerator g))
-                        field.SetValue(obj, g.Generate());
-                    else if (resolver.CanCreateAnObject(field.FieldType))
-                        field.SetValue(obj, Create(field.FieldType));
+                    if (resolver.CanCreateAnObject(field.FieldType))
+                    {
+                        if (canUseCustomGenerators && conf.FieldOrPropertyHasCustomGenerator(obj.GetType(), field.Name, out IBaseGenerator g))
+                        {
+                            field.SetValue(obj, g.Generate(new GeneratorContext(rand, field.FieldType, this)));
+                            resolver.RemoveReference(field.FieldType);
+                            continue;
+                        }
+                        else
+                            try
+                            {
+                                field.SetValue(obj, Create(field.FieldType));
+                            }
+                            catch(ArgumentException)
+                            {
+                                field.SetValue(obj, null);
+                            }
+                    }
                     else
                         field.SetValue(obj, null);
                     resolver.RemoveReference(field.FieldType);
@@ -161,11 +184,20 @@ namespace Faker
                 {
                     resolver.AddReference(property.PropertyType);
                     if (canUseCustomGenerators && conf.FieldOrPropertyHasCustomGenerator(obj.GetType(), property.Name, out IBaseGenerator g))
-                        property.SetValue(obj, g.Generate());
-                    else if (resolver.CanCreateAnObject(property.PropertyType))
-                        property.SetValue(obj, Create(property.PropertyType));
+                    {
+                        property.SetValue(obj, g.Generate(new GeneratorContext(rand, property.PropertyType, this)));
+                        resolver.RemoveReference(property.PropertyType);
+                        continue;
+                    }
                     else
-                        property.SetValue(obj, null);
+                        try
+                        {
+                            property.SetValue(obj, Create(property.PropertyType));
+                        }
+                        catch(ArgumentException)
+                        {
+                            property.SetValue(obj, null);
+                        }
                     resolver.RemoveReference(property.PropertyType);
                 }
         }

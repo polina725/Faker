@@ -4,8 +4,8 @@ namespace Faker.ValueGenerator
 {
     public interface IBaseGenerator
     {
-        public object Generate();
+        public object Generate(GeneratorContext generatorContext);
 
-        public Type GetGeneratedType();
+        public bool CanGenerate(Type t);
     }
 }
