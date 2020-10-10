@@ -155,13 +155,13 @@ namespace Faker
             foreach (FieldInfo field in fields)
                 if (!AdditionalFunction.IsFilled(field, obj))
                 {
-                    resolver.AddReference(field.FieldType);
-                    if (resolver.CanCreateAnObject(field.FieldType))
+                    resolver.AddReference(field.FieldType, field);
+                    if (resolver.CanCreateAnObject(field.FieldType, field))
                     {
                         if (canUseCustomGenerators && conf.FieldOrPropertyHasCustomGenerator(obj.GetType(), field.Name, out IBaseGenerator g))
                         {
                             field.SetValue(obj, g.Generate(new GeneratorContext(rand, field.FieldType, this)));
-                            resolver.RemoveReference(field.FieldType);
+                            resolver.RemoveReference(field.FieldType, field);
                             continue;
                         }
                         else
@@ -176,17 +176,17 @@ namespace Faker
                     }
                     else
                         field.SetValue(obj, null);
-                    resolver.RemoveReference(field.FieldType);
+                    resolver.RemoveReference(field.FieldType, field);
 
                 }
             foreach (PropertyInfo property in properties)
                 if (property.CanWrite && !AdditionalFunction.IsFilled(property,obj))
                 {
-                    resolver.AddReference(property.PropertyType);
+                    resolver.AddReference(property.PropertyType, property);
                     if (canUseCustomGenerators && conf.FieldOrPropertyHasCustomGenerator(obj.GetType(), property.Name, out IBaseGenerator g))
                     {
                         property.SetValue(obj, g.Generate(new GeneratorContext(rand, property.PropertyType, this)));
-                        resolver.RemoveReference(property.PropertyType);
+                        resolver.RemoveReference(property.PropertyType, property);
                         continue;
                     }
                     else
@@ -198,7 +198,7 @@ namespace Faker
                         {
                             property.SetValue(obj, null);
                         }
-                    resolver.RemoveReference(property.PropertyType);
+                    resolver.RemoveReference(property.PropertyType, property);
                 }
         }
     }

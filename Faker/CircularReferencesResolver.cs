@@ -6,7 +6,7 @@ namespace Faker
 {
     class CircularReferencesResolver
     {
-        private Dictionary<Type, int> circularReferences = new Dictionary<Type, int>();
+        private Dictionary<MemberInfo, int> circularReferences = new Dictionary< MemberInfo, int>();
         private int maxRecursionLevel;
 
         
@@ -15,25 +15,25 @@ namespace Faker
             maxRecursionLevel = maxLevel;
         }
 
-        public void AddReference(Type t)
+        public void AddReference(Type t, MemberInfo member)
         {
-            if (!circularReferences.ContainsKey(t))
-                circularReferences.Add(t, 0);
+            if (!circularReferences.ContainsKey(member))
+                circularReferences.Add( member, 0);
             else
-                circularReferences[t] += 1;
+                circularReferences[member] += 1;
         }
 
-        public void RemoveReference(Type t)
+        public void RemoveReference(Type t, MemberInfo member)
         {
-            if (circularReferences.ContainsKey(t) && circularReferences[t] != 0)
-                circularReferences[t] -= 1;
-            if (circularReferences[t] == -1)
-                circularReferences.Remove(t);
+            if (circularReferences.ContainsKey(member) && circularReferences[member] != 0)
+                circularReferences[member] -= 1;
+            if (circularReferences[ member] == -1)
+                circularReferences.Remove( member);
         }
 
-        public bool CanCreateAnObject(Type t)
+        public bool CanCreateAnObject(Type t, MemberInfo member)
         {
-            return circularReferences.ContainsKey(t) && circularReferences[t] < maxRecursionLevel;
+            return circularReferences.ContainsKey( member) && circularReferences[ member] < maxRecursionLevel;
         }
     }
 }
