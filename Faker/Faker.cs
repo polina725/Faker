@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 using Faker.ValueGenerator;
@@ -33,8 +34,14 @@ namespace Faker
                 dlls.Add(Assembly.LoadFrom(s));
             foreach (Assembly a in dlls)
             {
-                IBaseGenerator d = (IBaseGenerator) a.CreateInstance(a.GetTypes()[0].ToString());
-                generators.Add(d);
+                foreach(Type t in a.GetTypes())
+                {
+                    if (t.GetInterface(nameof(IBaseGenerator)) != null)
+                    {
+                        IBaseGenerator d = (IBaseGenerator)Activator.CreateInstance(t);
+                        generators.Add(d);
+                    }
+                }
             }
         }
 
@@ -103,6 +110,7 @@ namespace Faker
 
         private ConstructorInfo GetConstructorWithMaxNumberOfParameters(Type t)
         {
+            //t.GetConstructors().Max(x => x.GetParameters().Length)
             ConstructorInfo[] constructors = t.GetConstructors();
             if (constructors.Length == 0)
                 return null;

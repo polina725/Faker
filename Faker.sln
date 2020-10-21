@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntGeneratorPlugin", "IntGe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FakerTests", "FakerTests\FakerTests.csproj", "{0C058FD3-0FD0-4AD0-9D65-CD6DACBB4861}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{0CED5194-B443-461D-A156-FE3C1F4B2643}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{C4C51F82-B266-4FB5-A707-CAE819A4D0D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{0C058FD3-0FD0-4AD0-9D65-CD6DACBB4861}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C058FD3-0FD0-4AD0-9D65-CD6DACBB4861}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C058FD3-0FD0-4AD0-9D65-CD6DACBB4861}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0CED5194-B443-461D-A156-FE3C1F4B2643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0CED5194-B443-461D-A156-FE3C1F4B2643}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0CED5194-B443-461D-A156-FE3C1F4B2643}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0CED5194-B443-461D-A156-FE3C1F4B2643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4C51F82-B266-4FB5-A707-CAE819A4D0D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4C51F82-B266-4FB5-A707-CAE819A4D0D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4C51F82-B266-4FB5-A707-CAE819A4D0D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4C51F82-B266-4FB5-A707-CAE819A4D0D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

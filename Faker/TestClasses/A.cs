@@ -7,7 +7,7 @@
         public char ch;
         public B b;
 
-        public A(B b)
+        public A(B  b)
         {
             this.b = b;
         }
